@@ -40,10 +40,10 @@ def register_patient(request):
             )
             patient.save()
             
-            messages.success(request, 'Inscription réussie ! Veuillez vous connecter.')
+            messages.success(request, 'Successful registration ! Please log in.')
             return redirect('login_patient')  # Remplacez 'login_patient' par le nom de votre URL de connexion
         except ValidationError:
-            messages.error(request, 'Adresse e-mail invalide. Veuillez réessayer.')
+            messages.error(request, 'Invalid email address. Try Again.')
         except Exception as e:
             messages.error(request, f'Erreur : {str(e)}')
 
@@ -59,12 +59,12 @@ def login_patient(request):
             if check_password(password, patient.password):
                 
                 request.session['patient_id'] = patient.id  
-                messages.success(request, 'Connexion réussie !')
+                messages.success(request, 'Welcome doctor '+ patient.lastname+'!')
                 return redirect('dashboard_patient')  
             else:
-                messages.error(request, 'Mot de passe incorrect. Veuillez réessayer.')
+                messages.error(request, 'Incorrect password. Try Again.')
         except Patient.DoesNotExist:
-            messages.error(request, 'Aucun patient trouvé avec cette adresse e-mail.')
+            messages.error(request, 'No doctors found with this email address.')
         except Exception as e:
             messages.error(request, f'Erreur : {str(e)}')
     

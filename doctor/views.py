@@ -23,7 +23,7 @@ def register_doctor(request):
 
         # Validate required fields
         if not all([lastname, firstname, gender, password, email, phone]):
-            messages.error(request, 'Tous les champs obligatoires doivent être remplis.')
+            messages.error(request, 'All required fields must be completed.')
             return render(request, 'register_patient.html')
          # Hash the password
         password = make_password(password)
@@ -43,10 +43,10 @@ def register_doctor(request):
             )
             doctor.save()
             
-            messages.success(request, 'Inscription réussie ! Veuillez vous connecter.')
-            return redirect('login_doctor')  # Remplacez 'login_patient' par le nom de votre URL de connexion
+            messages.success(request, 'Successful registration ! Please log in.')
+            return redirect('login_doctor') 
         except ValidationError:
-            messages.error(request, 'Adresse e-mail invalide. Veuillez réessayer.')
+            messages.error(request, 'Invalid email address. Try Again.')
         except Exception as e:
             messages.error(request, f'Erreur : {str(e)}')
     return render(request, 'register_doctor.html')
@@ -61,14 +61,14 @@ def login_doctor(request):
             doctor = Doctor.objects.get(email=email)
             print(password, doctor.password)
             if check_password(password, doctor.password):
-                # Mot de passe correct, connectez le médecin
-                request.session['doctor_id'] = doctor.id  # Stocke l'ID du doctor dans la session
-                messages.success(request, 'Connexion réussie !')
-                return redirect('dashboard_doctor')  # Assurez-vous que 'dashboard_doctor' est défini dans vos URL
+               
+                request.session['doctor_id'] = doctor.id  
+                messages.success(request, 'Welcome doctor '+ doctor.lastname+'!')
+                return redirect('dashboard_doctor') 
             else:
-                messages.error(request, 'Mot de passe incorrect. Veuillez réessayer.')
+                messages.error(request, 'Incorrect password. Try Again.')
         except Doctor.DoesNotExist:
-            messages.error(request, 'Aucun médecin trouvé avec cette adresse e-mail.')
+            messages.error(request, 'No doctors found with this email address.')
         except Exception as e:
             messages.error(request, f'Erreur : {str(e)}')
     
@@ -120,9 +120,9 @@ def dashboard_doctor(request):
             # Vous pouvez maintenant utiliser l'objet 'doctor' dans votre template
             return render(request, 'dashboard_doctor.html', {'doctor': doctor, 'patients': patients, 'health_data': health_data, 'prescriptions': prescriptions})
         except Doctor.DoesNotExist:
-            messages.error(request, 'Le médecin n\'existe pas.')
+            messages.error(request, 'The doctor does not exist.')
     else:
-        messages.error(request, 'Veuillez vous connecter pour accéder à cette page.')
+        messages.error(request, 'Please log in to access this page')
         return redirect('login_doctor')  # Redirige vers la page de connexion si l'ID du doctor n'est pas présent dans la session
 
 
@@ -152,11 +152,11 @@ def create_prescription(request, doctor_id):
             if patient and doctor:
                 prescription = Prescription(title=title, patient=patient, file=file, doctor=doctor)
                 prescription.save()
-                messages.success(request, 'Prescription créée avec succès.')
+                messages.success(request, 'Prescription created successfully.')
                 return redirect('dashboard_doctor')  # Assurez-vous que 'doctor_dashboard' est défini dans vos URL
             else:
-                messages.error(request, 'Patient ou médecin introuvable.')
+                messages.error(request, 'Patient or not found.')
         except (Patient.DoesNotExist, Doctor.DoesNotExist):
-            messages.error(request, 'Patient ou médecin introuvable.')
+            messages.error(request, 'Patient or not found.')
     
     return render(request, 'dashboard_doctor.html')
