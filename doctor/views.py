@@ -7,7 +7,7 @@ from django.contrib.auth.hashers import check_password
 from django.http import HttpResponse, JsonResponse
 from .models import Doctor, Prescription
 from patient.models import Patient
-
+from django.contrib.auth import logout
 
 
 # Create your views here.
@@ -160,3 +160,8 @@ def create_prescription(request, doctor_id):
             messages.error(request, 'Patient or not found.')
     
     return render(request, 'dashboard_doctor.html')
+
+def logout_doctor(request):
+    logout(request)
+    messages.success(request, 'You have been logged out successfully.')
+    return redirect('login_doctor')

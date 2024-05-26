@@ -4,6 +4,7 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.hashers import check_password
+from django.contrib.auth import logout
 
 from doctor.models import Prescription
 from .models import Patient
@@ -59,7 +60,7 @@ def login_patient(request):
             if check_password(password, patient.password):
                 
                 request.session['patient_id'] = patient.id  
-                messages.success(request, 'Welcome doctor '+ patient.lastname+'!')
+                messages.success(request, 'Welcome patient '+ patient.lastname+' '+ patient.firstname+'!')
                 return redirect('dashboard_patient')  
             else:
                 messages.error(request, 'Incorrect password. Try Again.')
@@ -113,3 +114,8 @@ def dashboard_patient(request):
 
     context = {'health_data': health_data, 'patient': patient, 'prescriptions': prescriptions}
     return render(request, 'dashboard_patient.html', context)
+
+def logout_patient(request):
+    logout(request)
+    messages.success(request, 'You have been logged out successfully.')
+    return redirect('login_patient')

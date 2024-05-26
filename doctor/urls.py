@@ -8,7 +8,8 @@ urlpatterns = [
     path('register', views.register_doctor , name='register_doctor'),
     path('get-patient-details/<int:patient_id>/', views.get_patient_details, name='get-patient-details'),
     path('dashboard', views.dashboard_doctor , name='dashboard_doctor'),
-    path('create-prescription/<int:doctor_id>/', views.create_prescription, name='create-prescription')
+    path('create-prescription/<int:doctor_id>/', views.create_prescription, name='create-prescription'),
+    path('logout/', views.logout_doctor, name='logout_doctor'),
 ]
 
 if settings.DEBUG:
