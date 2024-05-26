@@ -39,8 +39,9 @@ For this project, when the patient and the doctor arrive on the home page, they 
 
 ****dashboard administrator*****
 to access the dashboard you need to click on this link https://welandicruz.pythonanywhere.com/admin
-username: admin
-password: administrator
+
+`username: admin`
+`password: administrator`
 
 ## Installation
 
